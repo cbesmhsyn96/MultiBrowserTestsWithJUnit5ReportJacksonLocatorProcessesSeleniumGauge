@@ -1,0 +1,2 @@
+"DESCRİPTİON","DURATİON İN MS","NAME","PARENT SUİTE","START TİME","STATUS","STOP TİME","SUB SUİTE","SUİTE","TEST CLASS","TEST METHOD"
+"","23","m1()","","Mon Nov 18 17:23:34 GMT+03:00 2024","failed","Mon Nov 18 17:23:34 GMT+03:00 2024","","junittests.Tests","junittests.Tests","m1"

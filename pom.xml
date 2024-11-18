@@ -2,40 +2,70 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <properties>
-    <allure.version>2.29.0</allure.version>
-    </properties>
-
-
-
     <groupId>org.example</groupId>
     <artifactId>gauge-test</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <allure.version>2.25.0</allure.version>
+        <aspectj.version>1.9.21</aspectj.version>
+    </properties>
+
+    <!-- Dependency Management -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-bom</artifactId>
+                <version>${allure.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
+        <!-- Allure JUnit Integration -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Gauge Framework -->
         <dependency>
             <groupId>com.thoughtworks.gauge</groupId>
             <artifactId>gauge-java</artifactId>
             <version>[0.10.3,)</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- AssertJ for Fluent Assertions -->
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>3.25.3</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Selenium -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>4.26.0</version>
         </dependency>
+
+        <!-- JUnit 5 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.10.2</version>
+            <version>5.10.0</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Jackson for JSON Serialization -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -46,6 +76,8 @@
             <artifactId>jackson-core</artifactId>
             <version>2.18.1</version>
         </dependency>
+
+        <!-- Log4j for Logging -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
@@ -56,33 +88,30 @@
             <artifactId>log4j-core</artifactId>
             <version>2.17.2</version>
         </dependency>
+
+        <!-- SLF4J for Logging Compatibility -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-nop</artifactId>
             <version>1.7.36</version>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-junit5</artifactId>
-            <version>${allure.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-
     </dependencies>
 
     <build>
         <plugins>
+            <!-- Maven Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.7.0</version>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
+
+            <!-- Gauge Maven Plugin -->
             <plugin>
                 <groupId>com.thoughtworks.gauge.maven</groupId>
                 <artifactId>gauge-maven-plugin</artifactId>
@@ -99,7 +128,40 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <!-- Java Agent Konfigürasyonu -->
+                    <argLine>
+                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                    </argLine>
+                    <!-- Test Dosyalarını Belirt -->
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <!-- Allure Raporlama Parametreleri -->
+                    <systemPropertyVariables>
+                        <!-- Allure sonuçlarının kaydedileceği dizin -->
+                        <allure.results.directory>target/allure-results</allure.results.directory>
+                        <!-- Allure'un başarılı adımları raporlaması için detay seviyesi -->
+                        <allure.pass.verbosity>verbose</allure.pass.verbosity>
+                    </systemPropertyVariables>
+                    <!-- Sistem sınıf yükleyicisini kapat -->
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                </configuration>
+                <dependencies>
+                    <!-- AspectJ Weaving Kütüphanesi -->
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjweaver</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
         </plugins>
     </build>
-
 </project>
