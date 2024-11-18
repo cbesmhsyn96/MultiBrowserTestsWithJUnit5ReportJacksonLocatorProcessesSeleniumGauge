@@ -1,0 +1,27 @@
+[
+  {
+    "key":"HvrBtn",
+    "value": "div[class='devsite-banner-message-text']+devsite-switch-to-english-button",
+    "type": "css"
+  },
+  {
+    "key":"",
+    "value": "",
+    "type": ""
+  },
+  {
+    "key":"",
+    "value": "",
+    "type": ""
+  },
+  {
+    "key":"",
+    "value": "",
+    "type": ""
+  },
+  {
+    "key":"",
+    "value": "",
+    "type": ""
+  }
+]
